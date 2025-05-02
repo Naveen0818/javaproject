@@ -1,0 +1,96 @@
+Idea: “Money Moves” – A Financial Literacy Game
+
+Goal: Teach users essential money skills through interactive, story-driven decision-making – in a fun, bite-sized mobile/web game.
+
+
+---
+
+Concept Summary
+
+Players navigate real-life financial scenarios (e.g., budgeting, credit cards, loans, emergencies, retirement).
+
+Each choice impacts a “financial health” score (savings, credit, debt, investment).
+
+Short “levels” simulate months in the life of a fictional character (young adult, family, retiree, etc.).
+
+The game is educational but engaging – like a mini "Choose Your Own Adventure" for money.
+
+
+
+---
+
+Gameplay Example:
+
+Scenario: You receive a $1,200 tax refund.
+Options:
+
+1. Spend it on a new phone.
+
+
+2. Pay down credit card debt.
+
+
+3. Invest in a retirement account.
+
+
+
+Outcome:
+
+New phone → happiness +1, financial health –2.
+
+Pay debt → financial health +3.
+
+Invest → savings +2, unlocks “compound interest” mini-lesson.
+
+
+
+---
+
+Core Features
+
+
+---
+
+Why It’s Valuable for U.S. Bank
+
+Engages Gen Z and Millennials in an interactive way.
+
+Differentiates U.S. Bank’s digital platform.
+
+Reinforces financial wellness goals and app retention.
+
+Could evolve into a tool for real onboarding or financial counseling.
+
+
+
+---
+
+Tech Stack (2-day hackathon scope)
+
+Frontend: React (Web) or React Native (Mobile).
+
+Backend: Simple state machine or Firebase for storing user progress.
+
+Optional AI: Use GPT to generate scenario text dynamically.
+
+Assets: Simple vector art or Canva-style UI for characters and choices.
+
+
+
+---
+
+MVP Goal for Hackathon
+
+Build 2–3 scenarios.
+
+Track choices and display changing financial scores.
+
+Add 2–3 “pop-up” explainers.
+
+Optional: leaderboard or badge mockups.
+
+
+
+---
+
+Would you like a slide deck template or a sample game scenario tree for your team to kick off development?
