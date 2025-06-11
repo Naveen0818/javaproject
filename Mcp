@@ -1,0 +1,62 @@
+# mcp_server.py
+
+from fastapi import FastAPI, UploadFile, File
+from pydantic import BaseModel
+import os
+import openai
+import json
+from typing import List
+
+app = FastAPI()
+
+# Set your OpenAI API Key (e.g., GPT-4)
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
+class FortifyIssue(BaseModel):
+    issue_name: str
+    file_path: str
+    file_content: str
+    recommendation: str
+
+class FixRequest(BaseModel):
+    issues: List[FortifyIssue]
+
+@app.post("/apply-fixes")
+async def apply_fixes(req: FixRequest):
+    responses = []
+    for issue in req.issues:
+        prompt = generate_prompt(issue)
+        try:
+            fix = call_gpt(prompt)
+            responses.append({
+                "file_path": issue.file_path,
+                "original": issue.file_content,
+                "suggested_fix": fix
+            })
+        except Exception as e:
+            responses.append({
+                "file_path": issue.file_path,
+                "error": str(e)
+            })
+    return {"fixes": responses}
+
+def generate_prompt(issue: FortifyIssue) -> str:
+    return (
+        f"The following file has a vulnerability identified by Fortify: {issue.issue_name}.\n"
+        f"Recommendation: {issue.recommendation}.\n"
+        f"Please fix the code accordingly.\n\n"
+        f"File Content:\n{issue.file_content}\n"
+        f"Return only the modified code."
+    )
+
+def call_gpt(prompt: str) -> str:
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a secure code assistant."},
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.2,
+        max_tokens=1000
+    )
+    return response.choices[0].message['content']
