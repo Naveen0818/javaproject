@@ -1,0 +1,25 @@
+stages:
+  - scan
+  - remediate
+
+vulnerability_scan:
+  image: aquasec/trivy:latest
+  stage: scan
+  script:
+    - trivy fs --exit-code 0 --severity HIGH,CRITICAL --format json -o trivy-report.json .
+  artifacts:
+    paths:
+      - trivy-report.json
+    expire_in: 1 day
+
+remediation_agent:
+  image: python:3.10
+  stage: remediate
+  dependencies:
+    - vulnerability_scan
+  script:
+    - pip install requests
+    - export GITLAB_TOKEN=$GITLAB_TOKEN
+    - python bump_dependency_and_mr.py
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'

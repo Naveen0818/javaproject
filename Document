@@ -1,0 +1,66 @@
+Proposal: Hybrid Vulnerability Remediation Approach
+
+1. Introduction
+
+This document proposes a hybrid vulnerability remediation strategy for enterprise-scale Java-based microservices applications. The goal is to combine Shift Left (proactive) and Shift Right (reactive) practices to create a resilient and scalable vulnerability management solution.
+
+2. Why a Hybrid Approach?
+
+A hybrid approach ensures early detection during development (Shift Left) and continuous protection in production (Shift Right). This minimizes the risk of critical vulnerabilities escaping into production while ensuring runtime safety and observability.
+
+3. Shift Left: Early Detection and Prevention
+
+Key Practices:
+
+•	• Static Analysis (SAST) using Fortify
+
+•	• Dependency Scanning (SCA) using Black Duck
+
+•	• Pre-commit hooks and IDE integrations
+
+•	• CI/CD pipeline checks with GitLab
+
+4. Shift Right: Post-Deployment Detection and Response
+
+Key Practices:
+
+•	• Runtime scanning using Prisma Cloud or Trivy
+
+•	• Canary Deployments and Blue-Green strategies
+
+•	• Chaos Engineering for resilience testing
+
+•	• Centralized logging and observability with ELK, Prometheus, and Grafana
+
+5. Vulnerability Remediation Agent
+
+Core Capabilities:
+
+•	• Parse scan reports (Fortify, Black Duck, Prisma)
+
+•	• Identify impacted microservices
+
+•	• Suggest or auto-fix code with OpenRewrite/Semgrep
+
+•	• Create GitLab PRs or JIRA tickets
+
+6. Architecture Overview
+
+See attached architecture diagram for centralized vulnerability remediation agent across namespaces.
+
+ 
+
+7. GitLab CI/CD Automation
+
+CI/CD Pipeline Includes:
+
+•	• SAST and SCA during build stage
+
+•	• Post-merge remediation stage to trigger auto PR
+
+•	• Automated validation of fixes through test suites
+
+8. Conclusion
+
+By integrating both Shift Left and Shift Right approaches into a unified remediation workflow, the enterprise can ensure comprehensive security coverage from code to cloud. The proposed system emphasizes automation, scalability, and developer empower
+

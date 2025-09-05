@@ -1,0 +1,57 @@
+import os
+import subprocess
+import requests
+import base64
+
+GITLAB_API = "https://gitlab.com/api/v4"
+GITLAB_TOKEN = os.environ.get("GITLAB_TOKEN")
+REPO_URL = "https://gitlab.com/your-namespace/your-repo.git"
+REPO_NAME = "your-repo"
+DEPENDENCY = "log4j"
+NEW_VERSION = "2.21.0"
+BRANCH_NAME = f"security/bump-{DEPENDENCY}"
+
+def run(cmd, cwd=None):
+    print(f"Running: {cmd}")
+    subprocess.run(cmd, cwd=cwd, check=True, shell=True)
+
+def update_dependency(file_path):
+    with open(file_path, "r") as f:
+        lines = f.readlines()
+    with open(file_path, "w") as f:
+        for line in lines:
+            if DEPENDENCY in line and "<version>" in line:
+                line = f'    <version>{NEW_VERSION}</version>\n'
+            f.write(line)
+
+def create_merge_request(project_id):
+    headers = {"PRIVATE-TOKEN": GITLAB_TOKEN}
+    data = {
+        "id": project_id,
+        "source_branch": BRANCH_NAME,
+        "target_branch": "main",
+        "title": f"Bump {DEPENDENCY} to {NEW_VERSION} for security fix"
+    }
+    r = requests.post(f"{GITLAB_API}/projects/{project_id}/merge_requests", headers=headers, data=data)
+    print("Merge Request Response:", r.status_code, r.text)
+
+def main():
+    run(f"git clone {REPO_URL}")
+    os.chdir(REPO_NAME)
+
+    run(f"git checkout -b {BRANCH_NAME}")
+    update_dependency("pom.xml")
+    run("git config user.email 'bot@example.com'")
+    run("git config user.name 'SecurityBot'")
+    run("git add pom.xml")
+    run(f"git commit -m 'chore: bump {DEPENDENCY} to {NEW_VERSION} due to CVE'")
+    run(f"git push origin {BRANCH_NAME}")
+
+    # Get project ID
+    headers = {"PRIVATE-TOKEN": GITLAB_TOKEN}
+    r = requests.get(f"{GITLAB_API}/projects?search={REPO_NAME}", headers=headers)
+    project_id = r.json()[0]['id']
+    create_merge_request(project_id)
+
+if __name__ == "__main__":
+    main()
